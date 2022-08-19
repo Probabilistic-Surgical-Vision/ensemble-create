@@ -1,0 +1,9 @@
+# Large files
+ensemble-dataset
+ensemble-images
+state_dicts
+
+# Cache
+__pycache__
+.DS_Store
+venv

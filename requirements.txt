@@ -1,0 +1,12 @@
+numpy
+torch
+torchvision
+tqdm
+networkx
+pillow
+jupyter
+ipython
+nbconvert
+tifffile
+pyyaml
+matplotlib
