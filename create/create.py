@@ -117,10 +117,7 @@ class CreateEnsembleDataset(Dataset):
 
         uncertainty_means, uncertainty_vars = 0, 0
 
-        for i, image_pair in enumerate(tqdm.tqdm(self.dataloader, unit='batch')):
-            if i > 5:
-                break
-
+        for image_pair in tqdm.tqdm(self.dataloader, unit='batch'):
             left = image_pair['left'].to(self.device)
             right = image_pair['right'].to(self.device)
 
