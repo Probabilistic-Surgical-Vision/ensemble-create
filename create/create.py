@@ -95,7 +95,8 @@ class CreateEnsembleDataset(Dataset):
         prediction_heatmap = [left, right]
 
         for image in prediction:
-            prediction_heatmap.append(to_heatmap(image, self.device))
+            depth = to_heatmap(image, self.device)
+            prediction_heatmap.append(depth)
 
         prediction_heatmap = torch.stack(prediction_heatmap)
         image = make_grid(prediction_heatmap, nrow=2)
@@ -115,7 +116,6 @@ class CreateEnsembleDataset(Dataset):
         model.eval()
 
         uncertainty_means, uncertainty_vars = 0, 0
-        count = 0
 
         for i, image_pair in enumerate(tqdm.tqdm(self.dataloader, unit='batch')):
             if i > 5:
@@ -132,12 +132,11 @@ class CreateEnsembleDataset(Dataset):
             iterable = zip(images, estimations, filenames)
 
             for image, estimation, filename in iterable:
-                count += 1
                 uncertainty_means += estimation[2:].mean()
                 uncertainty_vars += estimation[2:].var()
 
                 if save_images_to is not None:
-
+                    
                     filepath = os.path.join(save_images_to, f'{filename}.png')
                     self.save_image(image, estimation, filepath)
 
@@ -148,8 +147,8 @@ class CreateEnsembleDataset(Dataset):
             
         normalisation_path = os.path.join(save_to, 'normalisation.json')
         normalisation_dict = {
-            'mean': uncertainty_means.item() / count,
-            'var': uncertainty_vars.item() / count
+            'mean': uncertainty_means.item() / len(self.dataset),
+            'var': uncertainty_vars.item() / len(self.dataset)
         }
 
         with open(normalisation_path, 'w+') as f:
