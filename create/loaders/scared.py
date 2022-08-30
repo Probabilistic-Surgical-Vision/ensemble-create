@@ -81,7 +81,7 @@ class SCAREDFilePathDataset(Dataset):
         right_path = self.rights[idx]
 
         basename = os.path.basename(left_path)
-        filename = os.path.splitext(basename)
+        filename, _ = os.path.splitext(basename)
 
         left = Image.open(left_path).convert('RGB')
         right = Image.open(right_path).convert('RGB')
